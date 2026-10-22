@@ -1,0 +1,23 @@
+# Dependencies and locally generated builds are recreated by Vercel.
+node_modules/
+.next/
+.next-*/
+out/
+build/
+dist/
+
+# Browser test caches, screenshots, traces, and reports are local only.
+artifacts/
+playwright-report/
+test-results/
+coverage/
+tests/
+playwright.config.ts
+
+# Local configuration and tool caches do not belong in deployment uploads.
+.git/
+.vercel/
+.env*
+*.tsbuildinfo
+*.log
+.DS_Store
