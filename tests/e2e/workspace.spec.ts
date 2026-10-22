@@ -156,13 +156,13 @@ test("mentor can approve, reject, and view server-filtered results", async ({ pa
   await expect(page.getByRole("button", { name: "Confirm rejection" })).toHaveCount(0);
   await expect(page.getByRole("dialog").locator(".score-detail")).toContainText("45");
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("status", { name: "Average marks" })).toHaveText("65.0%");
+  await expect(page.getByRole("region", { name: "Marks overview" })).toHaveCount(0);
   await page.getByRole("button", { name: "Approved", exact: true }).click();
   await page.getByRole("button", { name: "Field Notes", exact: true }).click();
   await page.getByRole("dialog").getByLabel("Obtained marks", { exact: true }).fill("0");
   await page.getByRole("button", { name: "Update marks", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeHidden();
-  await expect(page.getByRole("status", { name: "Average marks" })).toHaveText("22.5%");
+  await expect(page.getByRole("status", { name: "Average marks" })).toHaveCount(0);
 
 });
 

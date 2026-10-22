@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowDownLeft, ArrowRight, ArrowUpRight, Check, CircleDashed, Clock3, FolderGit2, Plus, RefreshCw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProjects, getStatistics } from "@/services/project.services";
-import { isAdmin, isReviewer } from "@/lib/dashboard-utils";
+import { isReviewer } from "@/lib/dashboard-utils";
 import type { SessionUser } from "@/types/project.types";
 import { ProjectTable } from "./project-table";
 
@@ -48,7 +48,7 @@ export function ProjectDashboard({ user, view }: { user: SessionUser; view: "ove
         <span className="stat-topline"><span className="stat-label">{label}</span><span className="stat-icon"><Icon size={18} strokeWidth={1.7} /></span></span><span className="stat-value">{statistics.isPending ? <span className="stat-skeleton" /> : value ?? "—"}</span><span className="stat-caption">{caption}<ArrowUpRight size={13} /></span>
       </button>)}
     </section>
-    {!isAdmin(user.role) && <section className="marks-summary" aria-label="Marks overview">
+    {!reviewer && <section className="marks-summary" aria-label="Marks overview">
       <h2>Average marks</h2>
       <output className="marks-average" aria-label="Average marks"><strong>{statistics.isPending ? "..." : averagePercentage == null ? "—" : averagePercentage.toFixed(1)}</strong><span>%</span></output>
     </section>}
