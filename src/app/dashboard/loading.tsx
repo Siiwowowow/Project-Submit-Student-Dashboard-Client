@@ -1,0 +1,2 @@
+import { LoaderCircle } from "lucide-react";
+export default function DashboardLoading() { return <div className="table-state" role="status"><LoaderCircle size={26} className="text-primary animate-spin" /><p>Getting things ready…</p></div>; }

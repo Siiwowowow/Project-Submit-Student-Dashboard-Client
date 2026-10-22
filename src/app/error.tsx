@@ -1,62 +1,9 @@
 "use client";
+import { AlertCircle, ArrowRight, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Brand } from "@/components/brand";
 
-import { useEffect } from "react";
-
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-white p-4">
-      <div className="max-w-md w-full text-center">
-        {/* Simple Icon */}
-        <div className="mb-8">
-          <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
-            <span className="text-5xl">⚠️</span>
-          </div>
-        </div>
-
-        {/* Error Message */}
-        <h1 className="text-4xl font-light text-gray-900 mb-2">
-          500
-        </h1>
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Something went wrong
-        </h2>
-        <p className="text-gray-500 mb-8">
-          {error.message || "An unexpected error occurred. Please try again."}
-        </p>
-
-        {/* Action Buttons */}
-        <div className="space-y-3">
-          <button
-            onClick={() => reset()}
-            className="w-full px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
-          >
-            Try again
-          </button>
-          <button
-            onClick={() => window.location.reload()}
-            className="w-full px-6 py-3 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            Reload page
-          </button>
-        </div>
-
-        {/* Error ID for support */}
-        {error.digest && (
-          <p className="mt-6 text-xs text-gray-400">
-            Error reference: {error.digest}
-          </p>
-        )}
-      </div>
-    </div>
-  );
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  return <main className="simple-state"><Brand /><span className="empty-state-icon"><AlertCircle size={28} /></span><h1>A small bump in the road.</h1><p>We couldn’t load this page. Give it another try — your work will be waiting.</p><Button className="primary-button" onClick={reset}><RefreshCw size={16} />Try again</Button><Link href="/login" className="text-action">Back to sign in<ArrowRight size={15} /></Link></main>;
 }

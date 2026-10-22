@@ -1,17 +1,7 @@
-"use client";
+import { redirect } from "next/navigation";
+import { getSessionUser } from "@/lib/server-api";
 
-import React, { Suspense } from 'react'
-import { GoogleLoginSuccess } from '@/components/GoogleLoginSuccess';
-
-export default function Page() {
-  return (
-    <>
-      <Suspense fallback={null}>
-        <GoogleLoginSuccess />
-      </Suspense>
-      <div>
-        
-      </div>
-    </>
-  )
+export default async function HomePage() {
+  const user = await getSessionUser();
+  redirect(user ? "/dashboard" : "/login");
 }

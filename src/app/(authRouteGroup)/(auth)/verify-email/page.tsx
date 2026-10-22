@@ -1,19 +1,2 @@
-// src/app/(commonLayout)/(auth)/verify-email/page.tsx
-import VerifyEmailForm from "@/components/Auth/VerifyEmailForm";
-import { Metadata } from "next";
-import { Suspense } from "react";
-
-export const metadata: Metadata = {
-  title: "Verify Email",
-  description: "Verify your email address",
-};
-
-export default function VerifyEmailPage() {
-  return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <Suspense fallback={<div>Loading...</div>}>
-        <VerifyEmailForm />
-      </Suspense>
-    </div>
-  );
-}
+import { redirect } from "next/navigation";
+export default function LegacyVerifyEmailPage() { redirect("/login"); }

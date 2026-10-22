@@ -1,20 +1,9 @@
-import LoginForm from "@/components/Auth/LoginForm";
+import { redirect } from "next/navigation";
+import { getSessionUser } from "@/lib/server-api";
+import { AuthScreen } from "@/components/Auth/auth-screen";
 
-interface LoginParams {
-  searchParams: Promise<{ redirect?: string; email?: string }>;
-}
-
-const LoginPage = async ({ searchParams }: LoginParams) => {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ expired?: string }> }) {
+  if (await getSessionUser()) redirect("/dashboard");
   const params = await searchParams;
-  const redirectPath = params.redirect;
-  const defaultEmail = params.email || "";  // 👈 যোগ করা হয়েছে
-
-  return (
-    <LoginForm 
-      redirectPath={redirectPath}
-      defaultEmail={defaultEmail}  // 👈 যোগ করা হয়েছে
-    />
-  );
-};
-
-export default LoginPage;
+  return <AuthScreen mode="login" expired={params.expired === "1"} />;
+}
