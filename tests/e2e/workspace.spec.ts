@@ -128,6 +128,7 @@ test("new students can register and receive an HttpOnly session", async ({ page 
 
 test("mentor can approve, reject, and view server-filtered results", async ({ page }) => {
   await signIn(page, mentorEmail);
+  await expect(page.getByRole("link", { name: "Manage users", exact: true })).toHaveCount(0);
   await expect(page.getByRole("button", { name: /^Total submissions: 7\./ })).toBeVisible();
   await expect(page.getByRole("table").getByRole("row")).toHaveCount(6);
   await page.screenshot({ path: "artifacts/mentor-dashboard.png", fullPage: true });
@@ -272,4 +273,42 @@ test("students see custom project totals and a normalized average", async ({ pag
   await page.getByRole("button", { name: "Field Notes", exact: true }).click();
   await expect(page.getByRole("dialog").locator(".score-detail")).toContainText("40 / 50");
   await expect(page.getByRole("dialog").getByLabel("Total marks", { exact: true })).toHaveCount(0);
+});
+
+
+test("admin can edit and delete projects and manage user accounts", async ({ page }) => {
+  await signIn(page, adminEmail);
+  await page.getByRole("button", { name: "Edit Field Notes", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Project name", { exact: true }).fill("Field Notes Admin Edited");
+  await dialog.getByLabel("Project status", { exact: true }).selectOption("REJECTED");
+  await dialog.getByLabel("Total marks", { exact: true }).fill("30");
+  await dialog.getByLabel("Obtained marks (optional)", { exact: true }).fill("20");
+  await dialog.getByRole("textbox", { name: "A note for the student", exact: true }).fill("Please improve the documentation and keyboard navigation.");
+  await dialog.getByRole("button", { name: "Save project", exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await page.getByRole("button", { name: "Field Notes Admin Edited", exact: true }).click();
+  await expect(page.getByRole("dialog").locator(".mentor-feedback-content")).toContainText("Please improve the documentation");
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Delete Field Notes Admin Edited", exact: true }).click();
+  await page.getByRole("button", { name: "Delete permanently", exact: true }).click();
+  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(page.getByRole("button", { name: "Field Notes Admin Edited", exact: true })).toHaveCount(0);
+  await page.getByRole("link", { name: "Manage users", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Manage users", exact: true })).toBeVisible();
+  await page.getByLabel("Search users", { exact: true }).fill("nadia@handin.test");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Edit user nadia@handin.test", exact: true }).click();
+  await page.getByRole("dialog").getByLabel("Name", { exact: true }).fill("Nadia Updated");
+  await page.getByRole("dialog").getByLabel("Account role", { exact: true }).selectOption("MENTOR");
+  await page.getByRole("dialog").getByLabel("Account status", { exact: true }).selectOption("BLOCKED");
+  await page.getByRole("button", { name: "Save user", exact: true }).click();
+  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(page.getByRole("table")).toContainText("Nadia Updated");
+  await expect(page.getByRole("table")).toContainText("Blocked");
+  await page.screenshot({ path: "artifacts/admin-user-management.png", fullPage: true });
+  await page.getByRole("button", { name: "Delete user nadia@handin.test", exact: true }).click();
+  await page.getByRole("button", { name: "Delete account", exact: true }).click();
+  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(page.getByText("No accounts match your search.")).toBeVisible();
 });

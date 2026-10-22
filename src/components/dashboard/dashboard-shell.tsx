@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { BookOpen, ChevronRight, FolderGit2, LayoutGrid, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Plus, X, ArrowUpRight, Check, UserRound } from "lucide-react";
+import { BookOpen, ChevronRight, FolderGit2, LayoutGrid, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Plus, X, ArrowUpRight, Check, UserRound, Users } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getInitials, isReviewer, roleLabel } from "@/lib/dashboard-utils";
+import { getInitials, isAdmin, isReviewer, roleLabel } from "@/lib/dashboard-utils";
 import { useAuth } from "@/providers/AuthProvider";
 import type { SessionUser } from "@/types/project.types";
 
@@ -25,9 +25,10 @@ export function DashboardShell({ children, user }: { children: React.ReactNode; 
   const links = [
     { href: "/dashboard", label: "Overview", icon: LayoutGrid },
     { href: "/dashboard/projects", label: reviewer ? "All submissions" : "My projects", icon: FolderGit2 },
+    ...(isAdmin(user.role) ? [{ href: "/dashboard/users", label: "Manage users", icon: Users }] : []),
     ...(!reviewer ? [{ href: "/dashboard/new", label: "Submit a project", icon: Plus }] : []),
   ];
-  const title = pathname.endsWith("/new") ? "New submission" : pathname.endsWith("/projects") ? (reviewer ? "All submissions" : "My projects") : "Overview";
+  const title = pathname.endsWith("/users") ? "Manage users" : pathname.endsWith("/new") ? "New submission" : pathname.endsWith("/projects") ? (reviewer ? "All submissions" : "My projects") : "Overview";
 
   useEffect(() => {
     if (!mobileOpen) return;

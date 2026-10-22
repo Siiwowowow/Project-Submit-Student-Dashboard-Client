@@ -1,7 +1,7 @@
 "use client";
 
 import type { FeedbackRun } from "@/lib/feedback-format";
-import type { ApiResult, Project, ProjectInput, ProjectPage, ProjectStatistics, ProjectStatus } from "@/types/project.types";
+import type { ApiResult, Project, ProjectAdminInput, ProjectInput, ProjectPage, ProjectStatistics, ProjectStatus } from "@/types/project.types";
 
 export class ApiError extends Error {
   constructor(
@@ -50,3 +50,9 @@ export const markProject = (id: string, score: number, scoreOutOf = 100) =>
 
 export const updateFeedback = (id: string, reviewComment: string, reviewCommentFormat: FeedbackRun[]) =>
   apiRequest<Project>("projects/" + id + "/feedback", { method: "PATCH", body: JSON.stringify({ reviewComment, reviewCommentFormat }) });
+
+export const updateProject = (id: string, input: ProjectAdminInput) =>
+  apiRequest<Project>("projects/" + id, { method: "PATCH", body: JSON.stringify(input) });
+
+export const deleteProject = (id: string) =>
+  apiRequest<{ id: string }>("projects/" + id, { method: "DELETE" });

@@ -59,3 +59,20 @@ export interface ApiResult<T> {
   data: T;
   errorSources?: { path: string; message: string }[];
 }
+export interface ProjectAdminInput extends Omit<ProjectInput, "backendRepoUrl"> {
+  backendRepoUrl?: string;
+  status: ProjectStatus;
+  score: number | null;
+  scoreOutOf: number;
+  reviewComment: string | null;
+  reviewCommentFormat?: FeedbackRun[];
+}
+
+export interface ManagedUser extends SessionUser { status: "ACTIVE" | "BLOCKED" }
+export interface UserPage {
+  users: ManagedUser[];
+  pagination: ProjectPage["pagination"];
+}
+export interface UserAdminInput {
+  name: string; email: string; role: UserRole; status: "ACTIVE" | "BLOCKED"; password?: string;
+}

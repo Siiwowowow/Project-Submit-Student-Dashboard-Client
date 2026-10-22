@@ -4,8 +4,10 @@ import { API_URL, SESSION_COOKIE } from "@/lib/server-api";
 async function handleRequest(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
   const endpoint = path.join("/");
-  // Allow only project endpoints; never turn this into an arbitrary URL proxy.
-  if (!/^projects(?:\/(?:mine(?:\/stats)?|stats|[a-f0-9-]{36}(?:\/(?:review|marks|feedback))?))?$/.test(endpoint)) {
+  // Only explicitly supported workspace routes can reach the backend.
+  const projectEndpoint = /^projects(?:\/(?:mine(?:\/stats)?|stats|[a-f0-9-]{36}(?:\/(?:review|marks|feedback))?))?$/.test(endpoint);
+  const userEndpoint = /^users(?:\/[a-f0-9-]{36})?$/.test(endpoint);
+  if (!projectEndpoint && !userEndpoint) {
     return NextResponse.json({ success: false, message: "Route not found." }, { status: 404 });
   }
   if (request.method !== "GET" && request.headers.get("origin") !== request.nextUrl.origin) {
@@ -35,3 +37,4 @@ async function handleRequest(request: NextRequest, context: { params: Promise<{ 
 export const GET = handleRequest;
 export const POST = handleRequest;
 export const PATCH = handleRequest;
+export const DELETE = handleRequest;

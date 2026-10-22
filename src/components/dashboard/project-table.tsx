@@ -10,6 +10,7 @@ import { formatDate, getInitials, isAdmin, isReviewer } from "@/lib/dashboard-ut
 import type { Project, ProjectPage, SessionUser } from "@/types/project.types";
 import { ProjectScore } from "./project-score";
 import { ProjectLinks } from "./project-links";
+import { AdminProjectActions } from "./admin-project-actions";
 import { StatusBadge } from "./status-badge";
 import { EmptyState, ErrorState, LoadingState } from "./feedback-state";
 import { ProjectDetailDialog } from "./project-detail-dialog";
@@ -46,6 +47,7 @@ export function ProjectTable({ user, query, filtered, page, limit, onPageChange,
               <Tooltip><TooltipTrigger asChild><button className="row-action action-approve" aria-label={"Approve " + project.name} onClick={() => openProject(project, "APPROVED")}><Check size={16} /></button></TooltipTrigger><TooltipContent>Approve project</TooltipContent></Tooltip>
               <Tooltip><TooltipTrigger asChild><button className="row-action action-reject" aria-label={"Reject " + project.name} onClick={() => openProject(project, "REJECTED")}><X size={16} /></button></TooltipTrigger><TooltipContent>Reject project</TooltipContent></Tooltip>
             </>}
+            {isAdmin(user.role) && <AdminProjectActions project={project} onSaved={() => onPageChange(1)} />}
             <Tooltip><TooltipTrigger asChild><button className="row-action" aria-label={"View " + project.name} onClick={() => openProject(project)}><Eye size={16} /></button></TooltipTrigger><TooltipContent>View project</TooltipContent></Tooltip>
           </div></TableCell>
         </TableRow>)}
